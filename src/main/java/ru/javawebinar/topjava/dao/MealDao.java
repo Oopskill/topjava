@@ -14,7 +14,7 @@ public class MealDao {
     private static List<MealTo> mealTos = new ArrayList<>(MealsUtil.getMealsTo(meals));
 
     public List<MealTo> getAllMeals() {
-        return mealTos;
+        return MealsUtil.getMealsTo(meals);
     }
 
     public void addMeal(LocalDateTime time, String description, int calories){
@@ -35,6 +35,6 @@ public class MealDao {
     }
 
     public MealTo getMeal(int id){
-        return mealTos.stream().filter(m -> m.getId().get() == id).findFirst().get();
+        return getAllMeals().stream().filter(m -> m.getId().get() == id).findFirst().get();
     }
 }

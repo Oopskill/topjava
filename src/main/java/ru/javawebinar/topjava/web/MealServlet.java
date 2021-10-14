@@ -36,7 +36,6 @@ public class MealServlet extends HttpServlet {
             dao.updateMeal(Integer.parseInt(id),updMeal);
         }
         request.setAttribute("meals",dao.getAllMeals());
-        dao.getAllMeals().forEach(System.out :: println);
         response.sendRedirect("/meals");
     }
 

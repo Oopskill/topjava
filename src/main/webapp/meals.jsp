@@ -23,8 +23,8 @@
         <td>${meal.formatDate}</td>
         <td>${meal.description}</td>
         <td>${meal.calories}</td>
-        <td><a href="meals?action=update&id=${meal.id.get()}&namePage=update"></a>Update</td>
-        <td><a href="meals?action=delete&id=${meal.id.get()}&namePage=delete"></a>Delete</td>
+        <td><a href="meals?action=update&id=${meal.id.get()}&namePage=update"/>Update</td>
+        <td><a href="meals?action=delete&id=${meal.id.get()}&namePage=delete"/>Delete</td>
     </tr>
 </c:forEach>
 </table>
