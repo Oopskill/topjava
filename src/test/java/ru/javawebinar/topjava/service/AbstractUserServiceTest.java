@@ -1,10 +1,12 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.dao.DataAccessException;
+import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
@@ -27,13 +29,14 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     @Autowired
     private CacheManager cacheManager;
 
-    @Autowired
-    protected JpaUtil jpaUtil;
+//    @Autowired
+//    protected JpaUtil jpaUtil;
 
     @Before
     public void setup() {
+        Assume.assumeFalse(getEnv().acceptsProfiles(Profiles.JDBC));
         cacheManager.getCache("users").clear();
-        jpaUtil.clear2ndLevelHibernateCache();
+//        jpaUtil.clear2ndLevelHibernateCache();
     }
 
     @Test

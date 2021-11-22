@@ -1,9 +1,9 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
@@ -21,6 +21,12 @@ public abstract class AbstractMealServiceTest extends AbstractServiceTest {
 
     @Autowired
     protected MealService service;
+
+
+    @Before
+    public void checkRealization(){
+        Assume.assumeFalse(getEnv().acceptsProfiles(Profiles.JDBC));
+    }
 
     @Test
     public void delete() {
