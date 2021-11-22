@@ -14,10 +14,7 @@ import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Repository
 @Transactional(readOnly = true)
@@ -81,24 +78,44 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public List<User> getAll() {
-        List<User> users = jdbcTemplate.query("SELECT * FROM users ORDER BY name, email", ROW_MAPPER);
-        return users.stream().map(this::setRoles).collect(Collectors.toList());
+        List<User> users = jdbcTemplate.query("select * from users order by name, email", ROW_MAPPER);
+        Map<Integer, Set<Role>> map = new HashMap<>();
+
+        jdbcTemplate.query("""
+                SELECT u.id, u.name, u.email, u.password, u.registered, u.enabled, u.calories_per_day,
+                    string_agg(r.role, ', ')  AS roles FROM users u LEFT JOIN user_roles r ON r.user_id = u.id
+                    GROUP BY u.id
+                """, rs -> {
+            do {
+                Set<Role> roles = new HashSet<>();
+                for (String s : rs.getString("roles").split(", ")) {
+                    roles.add(Role.valueOf(s));
+                }
+                map.put(rs.getInt("id"), roles);
+            } while (rs.next());
+        });
+        users.forEach(u -> u.setRoles(map.get(u.getId())));
+        return users;
     }
     
     private User setRoles(User u){
         if (u != null){
-            jdbcTemplate.query("""
-                    SELECT u.id, u.name, u.email, u.password, u.registered, u.enabled, u.calories_per_day,
-                    string_agg(r.role, ', ')  AS roles FROM users u LEFT JOIN user_roles r ON r.user_id = ?\s
-                    GROUP BY u.id""", rs -> {
-                            while (rs.next()){
-                                Set<Role> roles = new HashSet<>();
-                                for (String s : rs.getString("roles").split(", ")){
-                                    roles.add(Role.valueOf(s));
-                                }
-                                u.setRoles(roles);
-                            }
-                    }, u.getId());
+            List<Role> roles = jdbcTemplate.query("SELECT role FROM user_roles  WHERE user_id=?",
+                    (rs, rowNum) -> Role.valueOf(rs.getString("role")), u.getId());
+            u.setRoles(roles);
+//            jdbcTemplate.query("""
+//                    SELECT u.id, u.name, u.email, u.password, u.registered, u.enabled, u.calories_per_day,
+//                    string_agg(r.role, ', ')  AS roles FROM users u LEFT JOIN user_roles r ON r.user_id = ?\s
+//                    GROUP BY u.id""", rs -> {
+//                            while (rs.next()){
+//                                Set<Role> roles = new HashSet<>();
+//                                for (String s : rs.getString("roles").split(", ")){
+//                                    roles.add(Role.valueOf(s));
+//                                }
+//                                u.setRoles(roles);
+//                            }
+//                    }, u.getId());
+
         }
         return u;
     }
