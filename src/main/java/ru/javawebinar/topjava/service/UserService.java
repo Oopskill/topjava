@@ -1,7 +1,10 @@
 package ru.javawebinar.topjava.service;
 
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.support.NoOpCacheManager;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import ru.javawebinar.topjava.model.User;
@@ -54,5 +57,10 @@ public class UserService {
 
     public User getWithMeals(int id) {
         return checkNotFoundWithId(repository.getWithMeals(id), id);
+    }
+
+    @Bean
+    public CacheManager cacheManager() {
+        return new NoOpCacheManager();
     }
 }

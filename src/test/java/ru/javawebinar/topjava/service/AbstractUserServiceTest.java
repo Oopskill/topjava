@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,9 +13,11 @@ import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import javax.persistence.EntityManagerFactory;
 import javax.validation.ConstraintViolationException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import ru.javawebinar.topjava.repository.JpaUtil;
 
@@ -28,6 +31,16 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Autowired
     private CacheManager cacheManager;
+
+//    for test to check hibernate.cache.use_second_level_cache is false
+    @Autowired
+    private EntityManagerFactory entityManagerFactory;
+
+    @Test
+    public void isSecondLevelCacheEnabled(){
+        Map<String, Object> map = entityManagerFactory.getProperties();
+        Assert.assertEquals(map.get("hibernate.cache.use_second_level_cache"),"false");
+    }
 
 //    @Autowired
 //    protected JpaUtil jpaUtil;
