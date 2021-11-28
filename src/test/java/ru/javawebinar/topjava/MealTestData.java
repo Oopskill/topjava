@@ -1,6 +1,8 @@
 package ru.javawebinar.topjava;
 
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.Month;
 import java.time.temporal.ChronoUnit;
@@ -34,5 +36,9 @@ public class MealTestData {
 
     public static Meal getUpdated() {
         return new Meal(MEAL1_ID, meal1.getDateTime().plus(2, ChronoUnit.MINUTES), "Обновленный завтрак", 200);
+    }
+
+    public static List<MealTo> getMealsTo(){
+        return MealsUtil.getTos(meals, MealsUtil.DEFAULT_CALORIES_PER_DAY);
     }
 }
