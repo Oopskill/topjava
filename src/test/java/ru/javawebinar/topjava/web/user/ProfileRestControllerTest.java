@@ -17,6 +17,8 @@ import static ru.javawebinar.topjava.web.user.ProfileRestController.REST_URL;
 
 class ProfileRestControllerTest extends AbstractControllerTest {
 
+    private static final String REST_URL = AdminRestController.REST_URL + '/';
+
     @Autowired
     private UserService userService;
 
@@ -44,5 +46,13 @@ class ProfileRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isNoContent());
 
         USER_MATCHER.assertMatch(userService.get(USER_ID), updated);
+    }
+
+    @Test
+    void getWithMeals() throws Exception{
+        perform(MockMvcRequestBuilders.get(REST_URL + USER_ID + "/with-meals"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(USER_MATCHER.contentJson(userService.getWithMeals(USER_ID)));
     }
 }
