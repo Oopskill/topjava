@@ -26,11 +26,11 @@ public class MealUIController extends AbstractMealController{
         super.delete(id);
     }
 
-//    @Override
-//    @GetMapping
-//    public List<MealTo> getAll() {
-//        return super.getAll();
-//    }
+    @Override
+    @GetMapping
+    public List<MealTo> getAll() {
+        return super.getAll();
+    }
 
     @PostMapping
     public void createOrUpdate(@RequestParam(value = "id", required = false) Integer id,

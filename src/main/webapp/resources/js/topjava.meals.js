@@ -4,6 +4,11 @@ const ctx = {
     ajaxUrl: mealAjaxUrl
 }
 
+function clearFilter(){
+    $("#filter").trigger('reset');
+    $.get(ajaxUrl, datatableDraw).done(successNoty("Clear filter"));
+}
+
 $(function () {
     makeEditable(
         $("#datatable").DataTable({
