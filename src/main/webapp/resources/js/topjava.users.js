@@ -5,6 +5,21 @@ const ctx = {
     ajaxUrl: userAjaxUrl
 };
 
+function enabled(checkbox, id){
+    //console.log(checkbox.parentNode.parentNode);
+    let enable = checkbox.checked;
+
+    $.post(userAjaxUrl + id, {'enable' : enable})
+        .done(function () {
+            let tr = checkbox.parentNode.parentNode;
+            $(tr).toggleClass('table-dark');
+            successNoty((enable ? "Enabled" : "Disabled") + " - id: " + id);
+        })
+        .fail(function () {
+            checkbox.checked = !enable;
+        });
+}
+
 // $(document).ready(function () {
 $(function () {
     makeEditable(
