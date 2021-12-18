@@ -13,8 +13,8 @@ import ru.javawebinar.topjava.util.MealsUtil;
 public class RootController {
     private static final Logger log = LoggerFactory.getLogger(RootController.class);
 
-    @Autowired
-    private MealService mealService;
+//    @Autowired
+//    private MealService mealService;
 
     @GetMapping("/")
     public String root() {
@@ -35,10 +35,10 @@ public class RootController {
     }
 
     @GetMapping("/meals")
-    public String getMeals(Model model) {
+    public String getMeals() {
         log.info("meals");
-        model.addAttribute("meals",
-                MealsUtil.getTos(mealService.getAll(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay()));
+//        model.addAttribute("meals",
+//                MealsUtil.getTos(mealService.getAll(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay()));
         return "meals";
     }
 }
