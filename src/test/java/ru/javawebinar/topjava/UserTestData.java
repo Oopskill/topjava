@@ -27,6 +27,7 @@ public class UserTestData {
     public static final int NOT_FOUND = 10;
 
     public static final User user = new User(USER_ID, "User", "user@yandex.ru", "password", 2005, Role.USER);
+    public static final User notValidUser = new User(USER_ID, "", "", "", 0, Role.USER);
     public static final User admin = new User(ADMIN_ID, "Admin", "admin@gmail.com", "admin", 1900, Role.ADMIN, Role.USER);
 
     static {
