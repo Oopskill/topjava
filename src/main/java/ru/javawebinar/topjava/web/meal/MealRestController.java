@@ -68,7 +68,7 @@ public class MealRestController extends AbstractMealController {
         try {
             created = super.create(meal);
         } catch (DataIntegrityViolationException exception){
-            throw new DataIntegrityViolationException(messageSource.getMessage("exception.exist.email", null,
+            throw new DataIntegrityViolationException(messageSource.getMessage("exception.exist.dateTime", null,
                     LocaleContextHolder.getLocale()));
         }
 

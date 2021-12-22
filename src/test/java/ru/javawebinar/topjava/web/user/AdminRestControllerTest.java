@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
@@ -153,5 +155,29 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(NotValUser)))
                 .andExpect(status().isUnprocessableEntity())
                 .andDo(print());
+    }
+
+    @Transactional(propagation = Propagation.NEVER)
+    @Test
+    void updateDuplicateEmailTest() throws Exception{
+        User updated = user;
+        updated.setEmail(admin.getEmail());
+        perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(admin))
+                .content(JsonUtil.writeAdditionProps(updated, "password", updated.getPassword())))
+                .andExpect(status().isConflict());
+    }
+
+    @Transactional(propagation = Propagation.NEVER)
+    @Test
+    void createDuplicateEmailTest() throws Exception{
+        User created = user;
+        created.setId(null);
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(admin))
+                .content(JsonUtil.writeAdditionProps(created, "password", created.getPassword())))
+                .andExpect(status().isConflict());
     }
 }

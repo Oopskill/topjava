@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.web.meal;
 
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -46,11 +48,17 @@ public class MealUIController extends AbstractMealController {
             // TODO change to exception handler
             throw new IllegalRequestDataException(ValidationUtil.getErrorString(result));
         }
-        if (meal.isNew()) {
-            super.create(meal);
-        } else {
-            super.update(meal, meal.getId());
+        try {
+            if (meal.isNew()) {
+                super.create(meal);
+            } else {
+                super.update(meal, meal.getId());
+            }
+        } catch(DataIntegrityViolationException ex){
+            throw new DataIntegrityViolationException(messageSource.getMessage("exception.exist.dateTime", null,
+                    LocaleContextHolder.getLocale()));
         }
+
     }
 
     @Override
